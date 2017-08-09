@@ -18,7 +18,7 @@
 
 #include "mesh.h"
 
-#include <glad\glad.h>
+#include <glad/glad.h>
 
 #include "vertex.h"
 

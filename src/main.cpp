@@ -19,7 +19,7 @@
 #include <iostream>
 
 #include "core/gamestate/gamestatemanager.h"
-#include "core\gamestate\ingame.h"
+#include "core/gamestate/ingame.h"
 
 int main()
 {
