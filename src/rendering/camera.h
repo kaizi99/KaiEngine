@@ -46,7 +46,7 @@ private:
     glm::vec3 m_right;
 
     float m_cameraSpeed = 1.0f;
-    float m_sensitivity = 0.02f;
+    float m_sensitivity = 0.85f;
 
 	void computeMatrecies();
 };

@@ -26,6 +26,7 @@ class IngameState : public Gamestate
 {
 public:
 	IngameState();
+	~IngameState();
 
 	void update(double deltaTime);
 	void render();

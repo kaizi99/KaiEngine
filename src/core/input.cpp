@@ -22,6 +22,8 @@
 #include <vector>
 #include <iostream>
 
+#include "../rendering/camera.h"
+
 #include "gamestate/gamestatemanager.h"
 
 Input* Input::instance;
@@ -36,13 +38,19 @@ void Input::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
     if (instance->m_firstMouse)
     {
-        instance->m_oldPos = std::make_pair(xpos, ypos);
+        instance->m_lastMouse = glm::vec2((float)xpos, (float)ypos);
         instance->m_firstMouse = false;
     }
-    else
-        instance->m_oldPos = instance->m_pos;
 
-    instance->m_pos = std::make_pair(xpos, ypos);
+    glm::vec2 pos = glm::vec2(xpos, ypos);
+    glm::vec2 delta = instance->m_lastMouse - pos;
+    instance->m_lastMouse = pos;
+
+    if (instance->m_camera)
+    {
+        delta *= instance->m_sensitivity;
+        instance->m_camera->rotate(glm::vec3(delta.y, delta.x, 0.0f));
+    }
 }
 
 void Input::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -79,6 +87,11 @@ void Input::update()
         m_buttons[it] = KEY_PRESSED;
 }
 
+void Input::setCamera(Camera* camera)
+{
+    m_camera = camera;
+}
+
 ButtonState Input::getKeyState(int key)
 {
 	auto pair = m_buttons.find(key);
@@ -86,9 +99,4 @@ ButtonState Input::getKeyState(int key)
         return KEY_RELEASED;
 
     return pair->second;
-}
-
-std::pair<double, double> Input::getMouseDelta()
-{
-	return std::make_pair(m_oldPos.first - m_pos.first, m_oldPos.second - m_pos.second);
 }

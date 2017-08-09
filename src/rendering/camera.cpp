@@ -53,10 +53,6 @@ void Camera::update(double deltaTime)
     if (state == KEY_JUST_PRESSED || state == KEY_PRESSED)
         m_pos += m_cameraSpeed * (float)deltaTime * m_right;
 
-    auto delta = input.getMouseDelta();
-    m_rot.y += delta.first * m_sensitivity;
-    m_rot.x += delta.second * m_sensitivity;
-
     computeMatrecies();
 }
 
@@ -80,17 +76,11 @@ void Camera::rotate(glm::vec3 delta)
 {
 	m_rot += delta;
 
-	if (m_rot.x > 89.0f)
-		m_rot.x = 89.0f;
+	if (m_rot.x > 90.0f)
+		m_rot.x = 90.0f;
 
-	if (m_rot.x < -89.0f)
-		m_rot.x = -89.0f;
-
-	if (m_rot.y > 360)
-		m_rot.y -= 360;
-
-	if (m_rot.y < 0)
-		m_rot.y += 360;
+	if (m_rot.x < -90.0f)
+		m_rot.x = -90.0f;
 
 	computeMatrecies();
 }

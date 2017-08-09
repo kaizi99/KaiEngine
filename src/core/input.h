@@ -21,7 +21,10 @@
 #include <unordered_map>
 #include <utility>
 
+#include <glm/glm.hpp>
+
 struct GLFWwindow;
+class Camera;
 
 enum ButtonState
 {
@@ -41,14 +44,17 @@ public:
 
 	void update();
 
+    void setCamera(Camera* camera);
+
 	ButtonState getKeyState(int key);
-	std::pair<double, double> getMouseDelta();
 
 private:
-	std::pair<double, double> m_pos;
-    std::pair<double, double> m_oldPos;
+    glm::vec2 m_lastMouse;
 
     bool m_firstMouse;
+
+    Camera* m_camera;
+    float m_sensitivity = 0.02f;
 
 	std::unordered_map<int, ButtonState> m_buttons;
 };

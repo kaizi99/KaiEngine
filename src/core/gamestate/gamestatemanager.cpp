@@ -45,6 +45,7 @@ GamestateManager::GamestateManager()
 
 	glfwMakeContextCurrent(m_window);
 
+	glfwSwapInterval(1);
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetKeyCallback(m_window, Input::keyboardCallback);
     glfwSetCursorPosCallback(m_window, Input::mouseCallback);
@@ -89,8 +90,6 @@ void GamestateManager::run(std::unique_ptr<Gamestate> gamestate)
 
 		m_currentGamestate->render();
 
-		glfwSwapBuffers(m_window);
-
 		if (m_popGamestate)
 		{
 			m_popGamestate = false;
@@ -103,6 +102,8 @@ void GamestateManager::run(std::unique_ptr<Gamestate> gamestate)
 		{
 			m_gamestates.push(std::move(m_toPush));
 		}
+
+        glfwSwapBuffers(m_window);
 	}
 }
 
