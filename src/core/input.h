@@ -42,12 +42,13 @@ public:
 	void update();
 
 	ButtonState getKeyState(int key);
-	std::pair<int, int> getMousePosition();
-	std::pair<int, int> getMousePositionChange();
+	std::pair<double, double> getMouseDelta();
 
 private:
-	std::pair<int, int> m_oldMousePos;
-	std::pair<int, int> m_mousePos;
+	std::pair<double, double> m_pos;
+    std::pair<double, double> m_oldPos;
+
+    bool m_firstMouse;
 
 	std::unordered_map<int, ButtonState> m_buttons;
 };

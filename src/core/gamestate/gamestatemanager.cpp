@@ -45,6 +45,10 @@ GamestateManager::GamestateManager()
 
 	glfwMakeContextCurrent(m_window);
 
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetKeyCallback(m_window, Input::keyboardCallback);
+    glfwSetCursorPosCallback(m_window, Input::mouseCallback);
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -69,6 +73,7 @@ void GamestateManager::run(std::unique_ptr<Gamestate> gamestate)
 	double lastFrame = glfwGetTime();
 	while (!glfwWindowShouldClose(m_window))
 	{
+        m_input.update();
 		glfwPollEvents();
 
 		double currentFrame = glfwGetTime();
@@ -119,6 +124,11 @@ float GamestateManager::getAspectRatio()
 	return (float)width / (float)height;
 }
 
+void GamestateManager::closeWindow()
+{
+    glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+}
+
 ShaderManager& GamestateManager::getShaderManager()
 {
 	return m_shaderManager;
@@ -132,4 +142,9 @@ TextureManager& GamestateManager::getTextureManager()
 MeshManager& GamestateManager::getMeshManager()
 {
 	return m_meshManager;
+}
+
+Input& GamestateManager::getInput()
+{
+    return m_input;
 }

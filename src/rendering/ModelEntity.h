@@ -28,15 +28,15 @@
 class ModelEntity : public Entity
 {
 public:
-	ModelEntity(TexturedModel model, Camera& camera, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
+	ModelEntity(TexturedModel model, Camera* camera, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
 
 	void update();
 	void render();
 
-	void setCamera(Camera& camera);
+	void setCamera(Camera* camera);
 private:
 	TexturedModel m_model;
-	Camera m_camera;
+	Camera* m_camera;
 
 	glm::vec3 m_pos;
 	glm::vec3 m_rot;

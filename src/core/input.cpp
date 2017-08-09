@@ -18,32 +18,77 @@
 
 #include "input.h"
 
+#include <GLFW/glfw3.h>
+#include <vector>
+#include <iostream>
+
+#include "gamestate/gamestatemanager.h"
+
+Input* Input::instance;
+
+Input::Input()
+{
+    instance = this;
+    m_firstMouse = true;
+}
+
 void Input::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
+    if (instance->m_firstMouse)
+    {
+        instance->m_oldPos = std::make_pair(xpos, ypos);
+        instance->m_firstMouse = false;
+    }
+    else
+        instance->m_oldPos = instance->m_pos;
 
+    instance->m_pos = std::make_pair(xpos, ypos);
 }
 
 void Input::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    if (key == GLFW_KEY_ESCAPE)
+        GamestateManager::instance->closeWindow();
 
+    if (action == GLFW_REPEAT)
+        return;
+
+    auto pair = instance->m_buttons.find(key);
+    if (pair == instance->m_buttons.end())
+    {
+        instance->m_buttons.insert(std::make_pair(key, KEY_JUST_PRESSED));
+        return;
+    }
+
+    if (action == GLFW_PRESS)
+        instance->m_buttons[key] = KEY_JUST_PRESSED;
+
+    if (action == GLFW_RELEASE)
+        instance->m_buttons[key] = KEY_RELEASED;
 }
 
 void Input::update()
 {
+    std::vector<int> toChange;
 
+    for (auto it : m_buttons)
+        if (it.second == KEY_JUST_PRESSED)
+            toChange.push_back(it.first);
+
+    for (int it : toChange)
+        m_buttons[it] = KEY_PRESSED;
 }
 
 ButtonState Input::getKeyState(int key)
 {
-	return ButtonState();
+	auto pair = m_buttons.find(key);
+    if (pair == m_buttons.end())
+        return KEY_RELEASED;
+
+    return pair->second;
 }
 
-std::pair<int, int> Input::getMousePosition()
+std::pair<double, double> Input::getMouseDelta()
 {
-	return std::pair<int, int>();
-}
-
-std::pair<int, int> Input::getMousePositionChange()
-{
-	return std::pair<int, int>();
+	return std::make_pair(m_oldPos.first - m_pos.first, m_oldPos.second - m_pos.second);
 }

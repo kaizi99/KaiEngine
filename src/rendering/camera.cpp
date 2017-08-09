@@ -19,6 +19,8 @@
 #include "camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <GLFW/glfw3.h>
+#include <iostream>
 
 #include "../core/gamestate/gamestatemanager.h"
 
@@ -33,7 +35,29 @@ Camera::Camera(glm::vec3 pos, glm::vec3 rot)
 
 void Camera::update(double deltaTime)
 {
+    Input& input = GamestateManager::instance->getInput();
 
+    ButtonState state = input.getKeyState(GLFW_KEY_W);
+    if (state == KEY_JUST_PRESSED || state == KEY_PRESSED)
+        m_pos += m_cameraSpeed * (float)deltaTime * m_front;
+
+    state = input.getKeyState(GLFW_KEY_S);
+    if (state == KEY_JUST_PRESSED || state == KEY_PRESSED)
+        m_pos -= m_cameraSpeed * (float)deltaTime * m_front;
+
+    state = input.getKeyState(GLFW_KEY_A);
+    if (state == KEY_JUST_PRESSED || state == KEY_PRESSED)
+        m_pos -= m_cameraSpeed * (float)deltaTime * m_right;
+
+    state = input.getKeyState(GLFW_KEY_D);
+    if (state == KEY_JUST_PRESSED || state == KEY_PRESSED)
+        m_pos += m_cameraSpeed * (float)deltaTime * m_right;
+
+    auto delta = input.getMouseDelta();
+    m_rot.y += delta.first * m_sensitivity;
+    m_rot.x += delta.second * m_sensitivity;
+
+    computeMatrecies();
 }
 
 glm::mat4 Camera::getView()
@@ -56,17 +80,17 @@ void Camera::rotate(glm::vec3 delta)
 {
 	m_rot += delta;
 
-	if (m_rot.x > 360)
-		m_rot -= 360;
+	if (m_rot.x > 89.0f)
+		m_rot.x = 89.0f;
 
-	if (m_rot.x < 0)
-		m_rot += 360;
+	if (m_rot.x < -89.0f)
+		m_rot.x = -89.0f;
 
 	if (m_rot.y > 360)
-		m_rot -= 360;
+		m_rot.y -= 360;
 
 	if (m_rot.y < 0)
-		m_rot += 360;
+		m_rot.y += 360;
 
 	computeMatrecies();
 }
@@ -101,6 +125,9 @@ void Camera::computeMatrecies()
 	);
 
 	glm::vec3 up = glm::cross(right, direction);
+
+    m_front = direction;
+    m_right = right;
 
 	m_view = glm::lookAt(m_pos, m_pos + direction, up);
 	m_projection = glm::perspective(glm::radians(70.0f), GamestateManager::instance->getAspectRatio(), 0.01f, 1000.0f);

@@ -36,14 +36,14 @@ std::vector<int> indices = {
 
 IngameState::IngameState()
     : m_camera(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0))
-	, m_test(TexturedModel(GamestateManager::instance->getMeshManager().createMesh(vertices, indices), Material("container2")), m_camera, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1))
+	, m_test(TexturedModel(GamestateManager::instance->getMeshManager().createMesh(vertices, indices), Material("container2")), &m_camera, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1))
 {
 
 }
 
 void IngameState::update(double deltaTime)
 {
-
+    m_camera.update(deltaTime);
 }
 
 void IngameState::render()

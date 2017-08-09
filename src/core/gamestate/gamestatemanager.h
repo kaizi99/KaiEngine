@@ -25,6 +25,7 @@
 #include "../../rendering/resources/texturemanager.h"
 #include "../../rendering/resources/MeshManager.h"
 #include "../../rendering/resources/shadermanager.h"
+#include "../input.h"
 
 class Gamestate;
 class Window;
@@ -45,15 +46,20 @@ public:
 
 	float getAspectRatio();
 
+    void closeWindow();
+
 	ShaderManager& getShaderManager();
 	TextureManager& getTextureManager();
 	MeshManager& getMeshManager();
+    Input& getInput();
 private:
 	GLFWwindow* m_window;
 
 	ShaderManager m_shaderManager;
 	TextureManager m_textureManager;
 	MeshManager m_meshManager;
+
+    Input m_input;
 
 	std::stack<std::unique_ptr<Gamestate>> m_gamestates;
 	std::unique_ptr<Gamestate> m_currentGamestate;

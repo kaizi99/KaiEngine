@@ -25,7 +25,7 @@
 
 #include "../core/gamestate/gamestatemanager.h"
 
-ModelEntity::ModelEntity(TexturedModel model, Camera& camera, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+ModelEntity::ModelEntity(TexturedModel model, Camera* camera, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	: m_model(model)
 	, m_pos(pos)
 	, m_rot(rot)
@@ -47,10 +47,10 @@ void ModelEntity::render()
 	glm::mat4 scale = glm::scale(m_scale);
 
 	glm::mat4 model = translation * rotation * scale;
-	m_model.render(model, m_camera.getView(), m_camera.getProjection());
+	m_model.render(model, m_camera->getView(), m_camera->getProjection());
 }
 
-void ModelEntity::setCamera(Camera & camera)
+void ModelEntity::setCamera(Camera* camera)
 {
 	m_camera = camera;
 }
