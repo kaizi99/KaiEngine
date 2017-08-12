@@ -16,22 +16,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#version 330 core
+layout (location = 0) out vec3 gPosition;
+layout (location = 1) out vec3 gNormal;
+layout (location = 2) out vec3 gAlbedo;
+layout (location = 3) out vec3 gMRM;
 
-#include <string>
-#include <glm/glm.hpp>
+uniform sampler2D albedo;
+uniform sampler2D normal;
+uniform sampler2D roughness;
+uniform sampler2D metallic;
 
-class Texture;
-class Shader;
+in vec2 TexCoord;
+in vec3 Normal;
+in vec3 FragPos;
 
-class Material
+void main()
 {
-public:
-	Material(std::string name);
-	void enable(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
-
-private:
-	Texture* m_diffuse;
-	Texture* m_specular;
-	Shader* m_shader;
-};
+    gPosition = FragPos;
+    gNormal = normalize(Normal);
+    gAlbedo = texture(albedo, TexCoord).rgb;
+    gMRM.r = texture(metallic, TexCoord).r;
+    gMRM.g = texture(roughness, TexCoord).r;
+    gMRM.b = 0;
+}

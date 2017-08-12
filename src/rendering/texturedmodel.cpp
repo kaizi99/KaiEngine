@@ -20,16 +20,36 @@
 
 #include "../core/gamestate/gamestatemanager.h"
 #include "mesh.h"
+#include "shader.h"
+#include "texture.h"
 
-TexturedModel::TexturedModel(Mesh* mesh, Material material)
+TexturedModel::TexturedModel(Mesh* mesh, Texture* albedo, Texture* normal, Texture* roughness, Texture* metallic)
 	: m_mesh(mesh)
-	, m_material(material)
+	, m_albedo(albedo)
+    , m_normal(normal)
+    , m_roughness(roughness)
+    , m_metallic(metallic)
+    , m_shader(GamestateManager::instance->getShaderManager().createShader("g_pbr"))
 {
-
+    m_shader->set("albedo", 0);
+    m_shader->set("normal", 1);
+    m_shader->set("roughness", 2);
+    m_shader->set("metallic", 3);
 }
 
 void TexturedModel::render(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
-	m_material.enable(model, view, projection);
+    GamestateManager::instance->getShaderManager().useShader(m_shader);
+    GamestateManager::instance->getTextureManager().bindTexture(0, m_albedo);
+    GamestateManager::instance->getTextureManager().bindTexture(1, m_normal);
+    GamestateManager::instance->getTextureManager().bindTexture(2, m_roughness);
+    GamestateManager::instance->getTextureManager().bindTexture(3, m_metallic);
+
+    glm::mat4 mvp = projection * view * model;
+    m_shader->set("mmodel", model);
+    m_shader->set("mview", view);
+    m_shader->set("mprojection", projection);
+    m_shader->set("mmvp", mvp);
+    
 	GamestateManager::instance->getMeshManager().renderMesh(m_mesh);
 }

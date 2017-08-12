@@ -16,32 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#version 330 core
+layout (location = 0) in vec3 pos;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texCoord;
 
-#include <string>
-#include <vector>
-#include <memory>
+uniform mat4 mmodel;
+uniform mat4 mview;
+uniform mat4 mprojection;
+uniform mat4 mmvp;
 
-#include <glm/glm.hpp>
+out vec3 Normal;
+out vec2 TexCoord;
+out vec3 FragPos;
 
-class Texture;
-class Shader;
-
-class Mesh;
-
-class TexturedModel
+void main()
 {
-public:
-	TexturedModel(Mesh* mesh, Texture* albedo, Texture* normal, Texture* roughness, Texture* metallic);
-
-	void render(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
-private:
-	Mesh* m_mesh;
-
-	Texture* m_albedo;
-    Texture* m_normal;
-    Texture* m_roughness;
-    Texture* m_metallic;
-
-    Shader* m_shader;
-};
+    gl_Position = mmvp * vec4(pos, 1.0);
+    FragPos = m_model * pos;
+    Normal = normal;
+    TexCoord = texCoord;
+}

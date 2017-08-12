@@ -10,7 +10,7 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	// 1: Position buffer
 	// 2: Normal buffer
 	// 3: Albedo
-	// 4: Metallic + Roughness parameters
+	// 4: Metallic + Roughness + Material parameters
 	unsigned int textures[4];
 
 	glGenTextures(4, textures);
@@ -40,4 +40,14 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 
 	unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 	glDrawBuffers(4, attachments);
+}
+
+void DeferredRenderer::activateGeometryPass()
+{
+
+}
+
+void DeferredRenderer::lightPass()
+{
+
 }
